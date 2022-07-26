@@ -1,5 +1,15 @@
-import { Get, JsonController, OnUndefined, Param } from "routing-controllers";
+import {
+  Body,
+  Get,
+  JsonController,
+  OnUndefined,
+  Param,
+  Post,
+  UseBefore,
+} from "routing-controllers";
+import bodyParser from "body-parser";
 
+import { VinDecodeMiddleware } from "../../middlewares";
 import { CarEntity } from "../../models";
 
 @JsonController("/cars")
@@ -22,5 +32,16 @@ export class CarController {
   @OnUndefined(404)
   getById(@Param("id") id: string): Promise<CarEntity> {
     return CarEntity.findOne(id);
+  }
+
+  /**
+   * Create a new car with VIN-decoded information
+   * @param body car resource creation request information listed on the Sketch UI
+   * @returns the created car resource
+   */
+  @Post()
+  @UseBefore(bodyParser.json(), VinDecodeMiddleware)
+  create(@Body() body: Pick<CarEntity, "id">): Promise<CarEntity> {
+    return CarEntity.create(body).save();
   }
 }

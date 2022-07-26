@@ -16,6 +16,18 @@ export class CarEntity extends BaseEntity {
   @Column({ update: false })
     vin: string;
 
+  @Column({ update: false })
+    make: string;
+
+  @Column({ update: false })
+    manufacturerName: string;
+
+  @Column({ update: false })
+    model: string;
+
+  @Column({ update: false })
+    modelYear: number;
+
   @Column()
     licensePlateNumber: string;
 
